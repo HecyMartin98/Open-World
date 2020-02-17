@@ -5,20 +5,21 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider))]
 public class Chunk : MonoBehaviour
 {
-    ChunkData cd;
+    public ChunkData cd;
     public Mesh chunkMesh;
     public MeshCollider collider;
     public void BuildChunk(int x, int y)
     {
-        if (FileManager.ChunkExists(x, y))
-        {
+        //if (FileManager.ChunkExists(x, y))
+        //{
             cd = new ChunkData();
             cd.size = 128;
             CreateMesh();
             SetPos(x, y);
+            GetNeighborsOfChunk(x, y);
             //CreateJsonFile below
             FileManager.UnloadChunk(this.cd);
-        }
+        //}
 
 
     }
@@ -81,4 +82,50 @@ public class Chunk : MonoBehaviour
         //This creates a brand new mesh, but maybe create OBJ and load the obj file and assign it to the mesh here instead.
         CreateMesh();
     }
+
+
+    private void GetNeighborsOfChunk(int x, int y)
+    {
+        
+        List<Vector2> newNeighbors = new List<Vector2>();
+        for (int xx = -1; xx <= 1; xx++)
+        {
+            for (int yy = -1; yy <= 1; yy++)
+            {
+                if (xx == 0 && yy == 0)
+                {
+                    continue; // You are not neighbor to yourself
+                }
+                //if (!CONSIDER_CORNERS && Mathf.Abs(xx) + Mathf.Abs(yy) > 1)
+                //{
+                //    continue;
+                //}
+                if (isOnMap(x + xx, y + yy))
+                {
+                    newNeighbors.Add(new Vector2(x + xx, y + yy));
+                }
+            }
+        }
+        cd.neighbors = new Vector2[newNeighbors.Count];
+        cd.neighbors = newNeighbors.ToArray();
+    }
+
+    
+
+    public bool isOnMap(int x, int y)
+    {
+        int size = MeshGenerator.instance.mapSize;
+        return x >= 0 && y >= 0 && x < size && y < size;
+    }
+    //void setChunkNeighbours()
+    //{
+    //    float MIN_X = 0;
+    //    float MIN_Y = 0;
+    //    float MAX_X = MeshGenerator.instance.mapSize;
+    //    float MAX_Y = MeshGenerator.instance.mapSize;
+    //    float startPosX = (cd.arrayPos.x - 1 < MIN_X) ? cd.arrayPos.x : cd.arrayPos.x - 1;
+    //    float startPosY = (cd.arrayPos.y - 1 < MIN_Y) ? cd.arrayPos.y : cd.arrayPos.y - 1;
+    //    float endPosX = (cd.arrayPos.x + 1 > MAX_X) ? cd.arrayPos.x : cd.arrayPos.x + 1;
+    //    float endPosY = (cd.arrayPos.y + 1 > MAX_Y) ? cd.arrayPos.y : cd.arrayPos.y + 1;
+    //}
 }

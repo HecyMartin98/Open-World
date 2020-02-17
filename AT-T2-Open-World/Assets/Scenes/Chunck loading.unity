@@ -232,8 +232,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e93f93db57765ea44b46e81457c03987, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapSize: 3
+  playerActiveChunk: {fileID: 0}
+  mat: {fileID: 2100000, guid: 4694d0c090def704ab038034b2304fe0, type: 2}
+  mapSize: 4
   chunkList: []
+  startChunk: {x: 3, y: 3}
 --- !u!4 &632258626
 Transform:
   m_ObjectHideFlags: 0
