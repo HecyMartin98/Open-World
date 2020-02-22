@@ -10,18 +10,45 @@ public class Chunk : MonoBehaviour
     public MeshCollider collider;
     public void BuildChunk(int x, int y)
     {
-        //if (FileManager.ChunkExists(x, y))
-        //{
+        if (FileManager.ChunkExists(x, y))
+        {
+            cd = FileManager.LoadChunk(x, y);
+            LoadMesh();
+
+        }
+        else
+        {
             cd = new ChunkData();
-            cd.size = 128;
-            CreateMesh();
-            SetPos(x, y);
-            GetNeighborsOfChunk(x, y);
-            //CreateJsonFile below
-            FileManager.UnloadChunk(this.cd);
-        //}
+        cd.size = 128;
+        CreateMesh();
+        SetPos(x, y);
+        GetNeighborsOfChunk(x, y);
+        FileManager.UnloadChunk(this.cd);
+        }
 
+    }
 
+    void LoadMesh()
+    {
+        Debug.Log("loading mesh from file");
+        gameObject.transform.position = cd.pos;
+        if(cd!= null)
+        {
+            collider = GetComponent<MeshCollider>();
+            GetComponent<MeshFilter>().mesh = chunkMesh = new Mesh();
+            chunkMesh.vertices = cd.vertices;
+            chunkMesh.uv = cd.uv;
+            chunkMesh.tangents = cd.tangents;
+            chunkMesh.triangles = cd.triangles;
+            chunkMesh.colors = cd.colours;
+            chunkMesh.RecalculateNormals();
+            collider.sharedMesh = chunkMesh;
+        }
+        else
+        {
+            Debug.Log("Chunk data is null");
+        }
+        MeshGenerator.instance.chunkList.Add(gameObject);
     }
 
     private void Start()
@@ -117,15 +144,5 @@ public class Chunk : MonoBehaviour
         int size = MeshGenerator.instance.mapSize;
         return x >= 0 && y >= 0 && x < size && y < size;
     }
-    //void setChunkNeighbours()
-    //{
-    //    float MIN_X = 0;
-    //    float MIN_Y = 0;
-    //    float MAX_X = MeshGenerator.instance.mapSize;
-    //    float MAX_Y = MeshGenerator.instance.mapSize;
-    //    float startPosX = (cd.arrayPos.x - 1 < MIN_X) ? cd.arrayPos.x : cd.arrayPos.x - 1;
-    //    float startPosY = (cd.arrayPos.y - 1 < MIN_Y) ? cd.arrayPos.y : cd.arrayPos.y - 1;
-    //    float endPosX = (cd.arrayPos.x + 1 > MAX_X) ? cd.arrayPos.x : cd.arrayPos.x + 1;
-    //    float endPosY = (cd.arrayPos.y + 1 > MAX_Y) ? cd.arrayPos.y : cd.arrayPos.y + 1;
-    //}
+    
 }

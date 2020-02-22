@@ -7,7 +7,7 @@ public class MeshCreation : MonoBehaviour
     public Vector3[] Vertices;
     void Start()
     {
-        
+
     }
 
     void BuildMesh()

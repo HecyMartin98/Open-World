@@ -18,7 +18,7 @@ public static class FileManager
     {
         string json = JsonUtility.ToJson(cd);
         File.WriteAllText
-            (Application.dataPath + "/StreamingAssets/ChunkData" + cd.pos.x.ToString() + cd.pos.y.ToString() + ".json", json);
+            (Application.dataPath + "/StreamingAssets/ChunkData" + cd.arrayPos.x.ToString() + cd.arrayPos.y.ToString() + ".json", json);
     }
 
     public static bool ChunkExists(int x, int y)
